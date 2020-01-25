@@ -243,7 +243,7 @@ dim(filteredMyDatasetClean)
 ```
 
 As it is clearly seen. We have reduced the number of inputs from 295 (the 296 is because we have added the output) to 208.  
-Now we will create a dunction to get the descriptive statistics from our data. It is also possible to use the base R function `summary()`.
+Now we will create a function to get the descriptive statistics from our data. It is also possible to use the base R function `summary()`.
 
 ```{r}
 mySummary <- function(x,...){
@@ -285,7 +285,7 @@ corrplot::corrplot(corrRes$r, type="upper", order="hclust",
 
 First we `set.seed()` in order to get reproducible results. In the code below we shuffle the rows using `sample()` function.
 ```{r random}
-set.seed(11111)
+set.seed(1234)
 
 # Randomly shuffle the data - we are doing this only once in order to maintain the data structure 
 shuffledFilteredMyDatasetClean = filteredMyDatasetClean[sample(nrow(filteredMyDatasetClean)),]
@@ -528,10 +528,10 @@ for(i in 1:10){
 cat("\n", "Mean 10-cv RMSE after FS = ", mean(rmse_tab_FS))
 
 ```
-Well, our feature selection helped our `lm()` model a lot! We have reduced 10-cv RMSE from 68 to 33.
+Well, our feature selection didn't helped our `lm()` model! Actually it performed much worse. So, maybe the problem is not linear in nature? 
 
 ### Building a model according to the 10-fold cross validation
-Ok, let's see if autoML can beat the score. First we will create stack all folds in one `data.frame`, but we will store fold number in separate column.
+Ok, let's see if autoML can beat the score. Maybe we will get the results close to those presented in the article? First we will create stack all folds in one `data.frame`, but we will store fold number in separate column.
 
 ```{r}
 
@@ -563,7 +563,7 @@ as.data.frame(train.hex) %>% DT::datatable(options = list(pageLength = 9, fontsi
               
 ```
 
-Ok, let's run the autoML for about 10 min. We have specified `fold_column = "which.fold"`,`max_runtime_secs = 10*60`, `seed = 1234` and `project_name = "RandomProject2"`.
+Ok, let's run the autoML for about 10 min. We have specified `fold_column = "which.fold"`,`max_runtime_secs = 10*60`, `seed = 111111` and `project_name = "RandomProject2"`.
 
 ```{r run_h2o}
 aml2 = h2o::h2o.automl(y = response,
@@ -578,7 +578,7 @@ aml2 = h2o::h2o.automl(y = response,
                    keep_cross_validation_predictions = TRUE,
                    keep_cross_validation_fold_assignment = TRUE,
                    export_checkpoints_dir=myExportDir,
-                   seed = 1234,
+                   seed = 111111,
                    project_name = "RandomProject2",
                    sort_metric = "RMSE")
 
